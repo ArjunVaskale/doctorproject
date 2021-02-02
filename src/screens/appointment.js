@@ -6,21 +6,15 @@ import '@firebase/firestore';
 import DatePicker from 'react-native-datepicker'
 import DropDownPicker from 'react-native-dropdown-picker';
 
-
-
-// import DateTimePicker from '@react-native-community/datetimepicker';
-
-
-
 export default class AppointmentScreen extends Component {
 
   state = {
     date: new Date(),
     doctorlist: [],
-    todaydate : new Date(),
+    todaydate: new Date(),
     consultant: '',
     time: '',
-    name : ''
+    name: ''
 
   }
 
@@ -28,7 +22,7 @@ export default class AppointmentScreen extends Component {
   signoutMethod(email, password) {
     firebase.auth().signOut().then(() => {
       this.props.navigation.navigate('Login')
-alert('Successfully Logout !!!')
+      alert('Successfully Logout !!!')
       // Sign-out successful.
     }).catch((error) => {
       // An error happened.
@@ -41,8 +35,8 @@ alert('Successfully Logout !!!')
     var userId = firebase.auth().currentUser.uid;
     firebase.database().ref(userId).once('value').then((snapshot) => {
       var name = (snapshot.val() && snapshot.val().name) || 'Anonymous';
-      this.setState({name : name})
-      console.log(' in postappointment function'  + name)
+      this.setState({ name: name })
+      console.log(' in postappointment function' + name)
     })
 
 
@@ -71,15 +65,19 @@ alert('Successfully Logout !!!')
 
         var childKey = childSnapshot.key;
         var childData = childSnapshot.val().name;
+        console.log(childData)
         arraylist.push(childData)
-
+        arraylist.push(childData)
+        var joined = this.state.doctorlist.concat(childData);
+        this.setState({ doctorlist: joined })
+        // console.log(this.state.doctorlist)
         // console.log(childKey)
         // console.log(childData)
 
         // console.log(childData)
-        console.log(arraylist)
 
-        console.log('todays data is '  + this.state.todaydate)
+
+        console.log('todays data is ' + this.state.todaydate)
 
 
 
@@ -91,7 +89,7 @@ alert('Successfully Logout !!!')
   render() {
     const { date } = this.state;
     console.log(this.state.date)
-    console.log(this.state.time)
+    console.log(this.state.consultant)
 
 
     return (
@@ -107,7 +105,7 @@ alert('Successfully Logout !!!')
             date={this.state.date}
             mode="date"
             placeholder="select date"
-           
+
             minDate={this.state.todaydate}
             maxDate="31-12-2099"
             confirmBtnText="Confirm"
@@ -164,14 +162,10 @@ alert('Successfully Logout !!!')
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', padding: 20 }}>
           <Text style={{ padding: 12, fontSize: 15, fontWeight: 'normal' }}> Consultant </Text>
           <DropDownPicker
-            items={[
-              { label: 'A', value: 'a', hidden: true },
-              { label: 'B', value: 'b', },
-              { label: 'C', value: 'c', },
-
-
-
-            ]}
+            items={[{ 
+              label: 'A', value: 'a', hidden: true },
+            { label: 'B', value: 'b', },
+            { label: 'C', value: 'c', },]}
             defaultValue={this.state.consultant}
             containerStyle={{ height: 40, width: 100 }}
             style={{ backgroundColor: '#fafafa' }}
@@ -179,9 +173,8 @@ alert('Successfully Logout !!!')
               justifyContent: 'flex-start'
             }}
             dropDownStyle={{ backgroundColor: '#fafafa' }}
-            onChangeItem={item => this.setState({
-              consultant: item.value
-            })}
+            onChangeItem={item => this.setState({ consultant: item.value })
+            }
           />
         </View>
 
